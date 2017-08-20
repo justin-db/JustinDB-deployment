@@ -12,8 +12,11 @@ docker run \
 docker run \
     --name justindb-1 -d \
     -p 9000:9000 -p 2551:2551 \
+    -v justindb-1-vol:/opt/docker/justindb \
     justindb/justindb:0.1 \
     -Djustin.node-id=0 \
+    -Djustin.storage-type=justin.db.storage.PersistentStorage \
+    -Djustin.storage-journal-path=/opt/docker/justindb/journal \
     -Dakka.remote.netty.tcp.hostname=192.168.0.3 \
     -Dakka.remote.netty.tcp.port=2551 \
     -Dakka.remote.netty.tcp.bind-hostname=172.17.0.3 \
@@ -23,8 +26,11 @@ docker run \
 docker run \
     --name justindb-2 -d \
     -p 9001:9000 -p 2552:2552 \
+    -v justindb-2-vol:/opt/docker/justindb \
     justindb/justindb:0.1 \
     -Djustin.node-id=1 \
+    -Djustin.storage-type=justin.db.storage.PersistentStorage \
+    -Djustin.storage-journal-path=/opt/docker/justindb/journal \
     -Dakka.remote.netty.tcp.hostname=192.168.0.3 \
     -Dakka.remote.netty.tcp.port=2552 \
     -Dakka.remote.netty.tcp.bind-hostname=172.17.0.4 \
@@ -34,15 +40,18 @@ docker run \
 docker run \
     --name justindb-3 -d \
     -p 9002:9000 -p 2553:2553 \
+    -v justindb-3-vol:/opt/docker/justindb \
     justindb/justindb:0.1 \
     -Djustin.node-id=2 \
+    -Djustin.storage-type=justin.db.storage.PersistentStorage \
+    -Djustin.storage-journal-path=/opt/docker/justindb/journal \
     -Dakka.remote.netty.tcp.hostname=192.168.0.3 \
     -Dakka.remote.netty.tcp.port=2553 \
     -Dakka.remote.netty.tcp.bind-hostname=172.17.0.5 \
     -Dakka.remote.netty.tcp.bind-port=2553 \
     -Dakka.cluster.role.storagenode.min-nr-of-members=3
 
-sleep 10
+sleep 40
 
 curl 192.168.0.3:9000/health
 curl 192.168.0.3:9001/health
